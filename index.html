@@ -8,5 +8,21 @@
 <body>
     <h1>여기가 힝구스터디</h1>
     <a href="./test-repo/">링크</a>
+
+    <br>
+
+    <embed src="test2.md" type="text/markdown">
+    <br>
+    <embed src="test1.html" type="text/html">
+    <br>
+    <iframe src="test1.html" id="child-iframe" frameborder="0"></iframe>
 </body>
+<script>
+	let iframe = document.querySelector("#child-iframe");
+
+	iframe.addEventListener('load', function() {
+		iframe.style.height = iframe.contentDocument.body.scrollHeight + 'px';
+		iframe.style.width = iframe.contentDocument.body.scrollWidth + 'px';
+	});	
+</script>
 </html>

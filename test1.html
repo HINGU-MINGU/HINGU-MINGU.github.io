@@ -1,0 +1,695 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Playing haptics</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-interactiveBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="08f9a3f5-8718-4929-8394-c6f87007e68c" class="page sans"><header><div class="page-header-icon undefined"><img class="icon" src="https://www.notion.so/icons/aquarius_gray.svg"/></div><h1 class="page-title"><a href="https://developer.apple.com/design/human-interface-guidelines/patterns/playing-haptics">Playing haptics</a></h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-person"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesPerson"><path d="M10.9536 7.90088C12.217 7.90088 13.2559 6.79468 13.2559 5.38525C13.2559 4.01514 12.2114 2.92017 10.9536 2.92017C9.70142 2.92017 8.65137 4.02637 8.65698 5.39087C8.6626 6.79468 9.69019 7.90088 10.9536 7.90088ZM4.4231 8.03003C5.52368 8.03003 6.42212 7.05859 6.42212 5.83447C6.42212 4.63843 5.51245 3.68945 4.4231 3.68945C3.33374 3.68945 2.41846 4.64966 2.41846 5.84009C2.42407 7.05859 3.32251 8.03003 4.4231 8.03003ZM1.37964 13.168H5.49561C4.87231 12.292 5.43384 10.6074 6.78711 9.51807C6.18628 9.14746 5.37769 8.87231 4.4231 8.87231C1.95239 8.87231 0.262207 10.6917 0.262207 12.1628C0.262207 12.7974 0.548584 13.168 1.37964 13.168ZM7.50024 13.168H14.407C15.4009 13.168 15.7322 12.8423 15.7322 12.2864C15.7322 10.8489 13.8679 8.88354 10.9536 8.88354C8.04492 8.88354 6.17505 10.8489 6.17505 12.2864C6.17505 12.8423 6.50635 13.168 7.50024 13.168Z"></path></svg></span>Assign</th><td><span class="user"><span class="icon text-icon user-icon"><span class="user-icon-inner">S</span></span>Seokjun Ko</span></td></tr><tr class="property-row property-row-status"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesStatus"><path d="M8.75488 1.02344C8.75488 0.613281 8.41309 0.264648 8.00293 0.264648C7.59277 0.264648 7.25098 0.613281 7.25098 1.02344V3.11523C7.25098 3.51855 7.59277 3.86719 8.00293 3.86719C8.41309 3.86719 8.75488 3.51855 8.75488 3.11523V1.02344ZM3.91504 5.0293C4.20215 5.31641 4.69434 5.32324 4.97461 5.03613C5.26855 4.74902 5.26855 4.25684 4.98145 3.96973L3.53906 2.52051C3.25195 2.2334 2.7666 2.21973 2.47949 2.50684C2.19238 2.79395 2.18555 3.28613 2.47266 3.57324L3.91504 5.0293ZM10.9629 4.01758C10.6826 4.30469 10.6826 4.79688 10.9697 5.08398C11.2568 5.37109 11.749 5.36426 12.0361 5.07715L13.4854 3.62793C13.7725 3.34082 13.7725 2.84863 13.4785 2.55469C13.1982 2.27441 12.7061 2.27441 12.4189 2.56152L10.9629 4.01758ZM15.0234 8.78906C15.4336 8.78906 15.7822 8.44727 15.7822 8.03711C15.7822 7.62695 15.4336 7.28516 15.0234 7.28516H12.9385C12.5283 7.28516 12.1797 7.62695 12.1797 8.03711C12.1797 8.44727 12.5283 8.78906 12.9385 8.78906H15.0234ZM0.975586 7.28516C0.56543 7.28516 0.223633 7.62695 0.223633 8.03711C0.223633 8.44727 0.56543 8.78906 0.975586 8.78906H3.07422C3.48438 8.78906 3.83301 8.44727 3.83301 8.03711C3.83301 7.62695 3.48438 7.28516 3.07422 7.28516H0.975586ZM12.0361 10.9902C11.749 10.71 11.2568 10.71 10.9629 10.9971C10.6826 11.2842 10.6826 11.7764 10.9697 12.0635L12.4258 13.5127C12.7129 13.7998 13.2051 13.793 13.4922 13.5059C13.7793 13.2256 13.7725 12.7266 13.4854 12.4395L12.0361 10.9902ZM2.52051 12.4395C2.22656 12.7266 2.22656 13.2188 2.50684 13.5059C2.79395 13.793 3.28613 13.7998 3.57324 13.5127L5.02246 12.0703C5.31641 11.7832 5.31641 11.291 5.03613 11.0039C4.74902 10.7168 4.25684 10.71 3.96973 10.9971L2.52051 12.4395ZM8.75488 12.9658C8.75488 12.5557 8.41309 12.207 8.00293 12.207C7.59277 12.207 7.25098 12.5557 7.25098 12.9658V15.0576C7.25098 15.4609 7.59277 15.8096 8.00293 15.8096C8.41309 15.8096 8.75488 15.4609 8.75488 15.0576V12.9658Z"></path></svg></span>Status</th><td><span class="status-value select-value-color-green"><div class="status-dot status-dot-color-green"></div>Done</span></td></tr><tr class="property-row property-row-date"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesDate"><path d="M3.29688 14.4561H12.7031C14.1797 14.4561 14.9453 13.6904 14.9453 12.2344V3.91504C14.9453 2.45215 14.1797 1.69336 12.7031 1.69336H3.29688C1.82031 1.69336 1.05469 2.45215 1.05469 3.91504V12.2344C1.05469 13.6973 1.82031 14.4561 3.29688 14.4561ZM3.27637 13.1162C2.70898 13.1162 2.39453 12.8154 2.39453 12.2207V5.9043C2.39453 5.30273 2.70898 5.00879 3.27637 5.00879H12.71C13.2842 5.00879 13.6055 5.30273 13.6055 5.9043V12.2207C13.6055 12.8154 13.2842 13.1162 12.71 13.1162H3.27637ZM6.68066 7.38086H7.08398C7.33008 7.38086 7.41211 7.30566 7.41211 7.05957V6.66309C7.41211 6.41699 7.33008 6.3418 7.08398 6.3418H6.68066C6.44141 6.3418 6.35938 6.41699 6.35938 6.66309V7.05957C6.35938 7.30566 6.44141 7.38086 6.68066 7.38086ZM8.92285 7.38086H9.31934C9.56543 7.38086 9.64746 7.30566 9.64746 7.05957V6.66309C9.64746 6.41699 9.56543 6.3418 9.31934 6.3418H8.92285C8.67676 6.3418 8.59473 6.41699 8.59473 6.66309V7.05957C8.59473 7.30566 8.67676 7.38086 8.92285 7.38086ZM11.1582 7.38086H11.5547C11.8008 7.38086 11.8828 7.30566 11.8828 7.05957V6.66309C11.8828 6.41699 11.8008 6.3418 11.5547 6.3418H11.1582C10.9121 6.3418 10.8301 6.41699 10.8301 6.66309V7.05957C10.8301 7.30566 10.9121 7.38086 11.1582 7.38086ZM4.44531 9.58203H4.84863C5.09473 9.58203 5.17676 9.50684 5.17676 9.26074V8.86426C5.17676 8.61816 5.09473 8.54297 4.84863 8.54297H4.44531C4.20605 8.54297 4.12402 8.61816 4.12402 8.86426V9.26074C4.12402 9.50684 4.20605 9.58203 4.44531 9.58203ZM6.68066 9.58203H7.08398C7.33008 9.58203 7.41211 9.50684 7.41211 9.26074V8.86426C7.41211 8.61816 7.33008 8.54297 7.08398 8.54297H6.68066C6.44141 8.54297 6.35938 8.61816 6.35938 8.86426V9.26074C6.35938 9.50684 6.44141 9.58203 6.68066 9.58203ZM8.92285 9.58203H9.31934C9.56543 9.58203 9.64746 9.50684 9.64746 9.26074V8.86426C9.64746 8.61816 9.56543 8.54297 9.31934 8.54297H8.92285C8.67676 8.54297 8.59473 8.61816 8.59473 8.86426V9.26074C8.59473 9.50684 8.67676 9.58203 8.92285 9.58203ZM11.1582 9.58203H11.5547C11.8008 9.58203 11.8828 9.50684 11.8828 9.26074V8.86426C11.8828 8.61816 11.8008 8.54297 11.5547 8.54297H11.1582C10.9121 8.54297 10.8301 8.61816 10.8301 8.86426V9.26074C10.8301 9.50684 10.9121 9.58203 11.1582 9.58203ZM4.44531 11.7832H4.84863C5.09473 11.7832 5.17676 11.708 5.17676 11.4619V11.0654C5.17676 10.8193 5.09473 10.7441 4.84863 10.7441H4.44531C4.20605 10.7441 4.12402 10.8193 4.12402 11.0654V11.4619C4.12402 11.708 4.20605 11.7832 4.44531 11.7832ZM6.68066 11.7832H7.08398C7.33008 11.7832 7.41211 11.708 7.41211 11.4619V11.0654C7.41211 10.8193 7.33008 10.7441 7.08398 10.7441H6.68066C6.44141 10.7441 6.35938 10.8193 6.35938 11.0654V11.4619C6.35938 11.708 6.44141 11.7832 6.68066 11.7832ZM8.92285 11.7832H9.31934C9.56543 11.7832 9.64746 11.708 9.64746 11.4619V11.0654C9.64746 10.8193 9.56543 10.7441 9.31934 10.7441H8.92285C8.67676 10.7441 8.59473 10.8193 8.59473 11.0654V11.4619C8.59473 11.708 8.67676 11.7832 8.92285 11.7832Z"></path></svg></span>Due</th><td><time>@August 16, 2023</time></td></tr><tr class="property-row property-row-select"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesSelect"><path d="M8 15.126C11.8623 15.126 15.0615 11.9336 15.0615 8.06445C15.0615 4.20215 11.8623 1.00293 7.99316 1.00293C4.13086 1.00293 0.938477 4.20215 0.938477 8.06445C0.938477 11.9336 4.1377 15.126 8 15.126ZM8 13.7383C4.85547 13.7383 2.33301 11.209 2.33301 8.06445C2.33301 4.91992 4.84863 2.39746 7.99316 2.39746C11.1377 2.39746 13.6738 4.91992 13.6738 8.06445C13.6738 11.209 11.1445 13.7383 8 13.7383ZM7.62402 10.6348C7.79492 10.915 8.20508 10.9287 8.37598 10.6348L10.666 6.73145C10.8574 6.41016 10.7002 6.04102 10.3652 6.04102H5.62793C5.29297 6.04102 5.14941 6.43066 5.32031 6.73145L7.62402 10.6348Z"></path></svg></span>VisionOS 추가 여부</th><td><span class="selected-value select-value-color-yellow">해당없음</span></td></tr><tr class="property-row property-row-select"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesSelect"><path d="M8 15.126C11.8623 15.126 15.0615 11.9336 15.0615 8.06445C15.0615 4.20215 11.8623 1.00293 7.99316 1.00293C4.13086 1.00293 0.938477 4.20215 0.938477 8.06445C0.938477 11.9336 4.1377 15.126 8 15.126ZM8 13.7383C4.85547 13.7383 2.33301 11.209 2.33301 8.06445C2.33301 4.91992 4.84863 2.39746 7.99316 2.39746C11.1377 2.39746 13.6738 4.91992 13.6738 8.06445C13.6738 11.209 11.1445 13.7383 8 13.7383ZM7.62402 10.6348C7.79492 10.915 8.20508 10.9287 8.37598 10.6348L10.666 6.73145C10.8574 6.41016 10.7002 6.04102 10.3652 6.04102H5.62793C5.29297 6.04102 5.14941 6.43066 5.32031 6.73145L7.62402 10.6348Z"></path></svg></span>대분류</th><td><span class="selected-value select-value-color-yellow">Pattern</span></td></tr></tbody></table></header><div class="page-body"><p id="388cc828-958b-4c46-9cb5-0d7f1bfa951f" class=""><mark class="highlight-gray">Playing haptics can engage people’s sense of touch and bring their familiarity with the physical world into your app or game.</mark></p><p id="90af285e-c613-4e35-8315-96a25d79215c" class="">햅틱을 재생하면 사용자의 촉각을 활용하여 물리적 세계의 친숙한 경험을 앱이나 게임으로 가져올 수 있습니다.</p><figure id="ecda07be-6de1-4727-b782-30922cde3ffb" class="image"><a href="https://docs-assets.developer.apple.com/published/367115f42d7b6235a3087fd140366955/patterns-playing-haptics-intro@2x.png"><img style="width:700px" src="https://docs-assets.developer.apple.com/published/367115f42d7b6235a3087fd140366955/patterns-playing-haptics-intro@2x.png"/></a></figure><p id="1018f7c4-cd82-4135-a1e8-6d318e10d51f" class=""><mark class="highlight-gray">The system can play haptics in addition to visual and auditory feedback to communicate things like the confirmation of an Apple Pay transaction or the arrival of a notification in iOS and watchOS. On a Mac that’s equipped with a Force Touch trackpad, apps can play haptics while people are dragging content or respond to different strengths of a force click to cause different levels of change in an onscreen element. In a tvOS or iPadOS app, game controllers can provide haptic feedback.</mark></p><p id="d5a902c2-2d6c-4410-95da-6757af4394eb" class="">시스템은 시각적 및 청각적 피드백과 함께 햅틱을 재생하여 iOS와 watchOS에서 Apple Pay 거래 확인이나 알림 도착과 같은 사항을 전달할 수 있습니다. Mac에서는 Force Touch 트랙패드가 장착된 경우, 앱은 사람들이 콘텐츠를 드래그하는 동안 햅틱스를 재생하거나 강한 클릭의 다른 강도에 반응하여 화면 요소에 다른 수준의 변화를 유발할 수 있습니다. tvOS나 iPadOS 앱에서는 게임 컨트롤러가 햅틱 피드백을 제공할 수 있습니다.</p><p id="bf67ffb0-5e94-49e0-a15b-e1d3755d5af7" class=""><strong><em>→ iOS, watchOS: 시청각 피드백 + 햅틱</em></strong></p><p id="612436b5-5ea7-4d24-9cdd-9faba64853c0" class=""><em><strong>Mac: Force Touch 트랙패드 or tvOS, iPadOS 게임 컨트롤러: 햅틱</strong></em></p><ul id="36f41d45-73ef-4b3a-8c36-5f692f482053" class="toggle"><li><details open=""><summary>역자참조</summary><p id="9348c95d-42b6-429f-8944-d07b3cafdba4" class="">iPad는 기기 자체에서 Haptics 자체를 제공하지 않는다.</p></details></li></ul><p id="1b0ce764-c83d-47c7-9dd7-4b3000811ae5" class="">
+</p><p id="8b9eec92-babb-448e-84d4-5acd1c39f7f8" class=""><mark class="highlight-gray">Depending on the platform, the system may provide haptic feedback for standard components by default. For example, components like switches, sliders, and pickers automatically play haptic feedback on supported iPhone models; on Apple Watch, the Taptic Engine generates haptics and watchOS combines an audible tone with some of them. In addition, the system may provide built-in haptic patterns you can use in your app or game or even let you design custom ones.</mark></p><p id="e8dedea5-0554-4d63-9b2c-160bdbbe595f" class="">플랫폼에 따라 시스템은 기본적으로 표준 구성 요소에 대해 햅틱 피드백을 제공할 수 있습니다. 예를 들어, 스위치, 슬라이더, 피커와 같은 구성 요소는 지원하는 iPhone 모델에서 자동으로 햅틱 피드백을 재생합니다. Apple Watch의 경우, Taptic 엔진이 햅틱을 생성하며 일부는 watchOS와 함께 가청음을 결합합니다. 또한 시스템은 앱이나 게임에서 사용할 수 있는 내장된 햅틱 패턴을 제공하거나 사용자 정의 햅틱 패턴을 디자인할 수도 있습니다.</p><p id="3013330a-c205-413f-aba7-ad9052f53d17" class="">→ 스위치, 피커 등 제공되는 components를 사용하면, 기본으로 haptis를 제공한다. Apple에서 제공하는 햅틱 패턴을 사용하거나 직접 햅틱 패턴을 만들어 서비스에 활용할 수 있다.</p><h2 id="6b9d4c19-090f-4b61-8330-ddf6153efcf5" class=""><mark class="highlight-gray"><strong><a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#Best-practices">Best practices</a></strong></mark></h2><p id="1f978833-f8b0-42d3-bd6b-f4db5c952bb8" class=""><mark class="highlight-gray"><strong>Use system-provided haptic patterns according to their documented meanings.</strong></mark><mark class="highlight-gray"> People recognize standard haptics because the system plays them consistently on interactions with standard controls. If the documented use case for a pattern doesn’t make sense in your app, use a generic pattern or create your own, where supported. For guidance, see </mark><mark class="highlight-gray"><a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#Custom-haptics">Custom haptics</a></mark><mark class="highlight-gray">.</mark></p><p id="0e184ae9-03f1-4993-bf33-3df7b8e236dd" class=""><strong>시스템 제공 햅틱 패턴을 문서화 된 의미에 따라 사용하세요.</strong> <mark class="highlight-yellow_background">시스템이 표준 컨트롤과 상호작용할 때 항상 같은 햅틱을 재생시키기 때문에, 사용자들은 표준적인 햅틱을 일관성 있게 인지한다.</mark> 만약 문서화 된 사용 사례가 앱에 맞지 않는다면, 지원되는 경우 일반적인 패턴을 사용하거나 직접 만들어 사용하세요. 자세한 지침은 <a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#Custom-haptics"><strong>Custom haptics</strong></a>을 참고하세요.</p><p id="65856f74-eef8-4809-ab72-116199865736" class=""><strong><em>→ 사용자들은 여러 종류의 햅틱에 해당하는 의미를 대략적으로 파악하고 있음을 인지하고, 햅틱의 일반적인 의미를 따라 사용할지 커스텀 할지 결정하라</em></strong></p><p id="55e07f35-d59b-4410-9a03-a75b748cd478" class="">
+</p><p id="de42e6ec-e5cd-44dd-9b12-a7bb74f47eb8" class=""><mark class="highlight-gray"><strong>Use haptics consistently.</strong></mark><mark class="highlight-gray"> It’s important to build a clear, causal relationship between each haptic and the action that causes it so people learn to associate certain haptic patterns with certain experiences. If a haptic doesn’t reinforce a cause-and-effect relationship, it can be confusing and seem gratuitous. For example, if your app plays a specific haptic pattern when a game character fails to finish a mission, people associate that pattern with a negative outcome. If you use the same haptic pattern for a positive outcome like a level completion, people will be confused.</mark></p><p id="fd730ab2-29c7-4e82-9059-a597842df6e0" class=""><strong>햅틱을 일관성 있게 사용하세요.</strong> <mark class="highlight-yellow_background">각 햅틱과 그것을 발생시키는 작업 사이에 명확한 원인과 결과 관계를 구축하는 것이 중요합니다. 이렇게 함으로써 사용자들은 특정 경험과 특정 햅틱 패턴을 연관짓게 됩니다.</mark> 원인과 결과 관계를 강조하지 않는 햅틱은 혼란스러울 수 있으며, 불필요해 보일 수 있습니다. 예를 들어, 앱이 게임 캐릭터가 미션을 완료하지 못했을 때 특정 햅틱 패턴을 재생한다면, 사용자들은 그 패턴을 부정적인 결과와 연관짓게 됩니다. 만약 동일한 햅틱 패턴을 레벨 완료와 같은 긍정적인 결과에 사용한다면, 사용자들은 혼란스러워질 것입니다.</p><p id="f30faf0d-7ccb-4aca-895a-c4b2f616af5c" class=""><strong><em>→ 특정 원인 또는 경험에 특정 햅틱 패턴을 발생시키는 관계를 명확히 해라.</em></strong></p><p id="bda44674-9acf-4b46-a31c-b7a9ecb9cc0a" class="">
+</p><p id="d3a43dd9-4a01-42a2-8fc4-edb666d0db1f" class=""><mark class="highlight-gray"><strong>Use haptics in ways that complement other feedback in your app.</strong></mark><mark class="highlight-gray"> When visual, auditory, and tactile feedback are in harmony — as they generally are in the physical world — the user experience is more coherent and can seem more natural. For example, match the intensity and sharpness of a haptic with the animation you use to accompany it. You can also synchronize sound with haptics; for developer guidance, see </mark><mark class="highlight-gray"><a href="https://developer.apple.com/documentation/corehaptics/delivering_rich_app_experiences_with_haptics">Delivering Rich App Experiences with Haptics</a></mark><mark class="highlight-gray">.</mark></p><p id="e711c8a4-1643-4d48-b30f-2e284a3c9ac3" class=""><strong>햅틱을 다른 피드백과 조화롭게 사용하세요.</strong> <mark class="highlight-yellow_background">시각적, 청각적, 촉각적 피드백이 조화롭게 조합되는 경우(일반적으로 물리적 세계에서 그렇듯) 사용자 경험은 더 일관되고 자연스러워집니다.</mark> 예를 들어, 햅틱의 강도와 선명도를 해당 햅틱과 동반하는 애니메이션과 일치 시키세요. 햅틱과 소리를 동기화할 수도 있습니다. 자세한 개발자 지침은 <a href="https://developer.apple.com/documentation/corehaptics/delivering_rich_app_experiences_with_haptics"><strong>Delivering Rich App Experiences with Haptics</strong></a>를 참고하세요.</p><p id="da62a511-4615-4cc3-bcee-fdc695a3fa43" class=""><strong><em>→ 햅틱과 다른 피드백(시각, 청각)을 적절하게 조합하여 제공하라.</em></strong></p><p id="2ce3208b-8bc8-4a22-b3be-ee498b2a5e95" class="">
+</p><p id="0b655cbc-4660-4161-a57b-45c673014fae" class=""><mark class="highlight-gray"><strong>Avoid overusing haptics.</strong></mark><mark class="highlight-gray"> Sometimes a haptic can feel just right when it happens occasionally, but become tiresome when it plays frequently. It’s important to do user testing that can help you discover a balance that most people appreciate. Often, the best haptic experience is one that people may not be conscious of, but miss when it’s turned off.</mark></p><p id="88e29c76-083f-48b9-b7b1-50a40cafe1d1" class=""><strong>햅틱의 과도한 사용은 피하세요.</strong> 때때로 햅틱은 가끔 일어날 때 딱 맞는 것처럼 느껴질 수 있지만,<mark class="highlight-yellow_background"> 빈번하게 재생되면 지루함을 유발할 수 있습니다.</mark> 대다수의 사용자가 즐거워하는 균형을 찾기 위해 사용자 테스트를 수행하는 것이 중요합니다. 종종, 가장 좋은 햅틱 경험은 사용자들이 의식하지 못하지만, 끄면 그것을 놓치는 경험이 될 수 있습니다.</p><p id="445b55e9-b2c5-4d2b-91af-eeb822ef223f" class=""><em><strong>→ 햅틱 서비스의 최적의 빈도를 찾기 위해 테스트를 해보라</strong></em></p><p id="69bd9d08-792a-4dd1-9a34-283cd6c1738f" class="">
+</p><p id="a1067878-7be4-4685-9634-00cfc942162f" class=""><mark class="highlight-gray"><strong>Make haptics optional.</strong></mark><mark class="highlight-gray"> Let people turn off or mute haptics if they wish, and make sure people can still enjoy your app without them.</mark></p><p id="8a49b3e2-4a83-4b22-bb2c-01ce6de8b602" class=""><mark class="highlight-yellow_background"><strong>햅틱을 선택적으로 사용할 수 있도록 합니다.</strong></mark> 사용자들이 원하는 경우 햅틱을 끄거나 음소거할 수 있도록 해 주세요. 또한 사용자들이 햅틱 없이도 앱을 즐길 수 있도록 해야 합니다.</p><p id="2693e74c-8060-4970-8ff5-404f73dd463d" class="">
+</p><p id="87de27f2-fff0-41a0-855b-0ae7a05948c6" class=""><mark class="highlight-gray"><strong>Be aware that playing haptics might impact other user experiences.</strong></mark><mark class="highlight-gray"> By design, haptics produce enough physical force for people to feel the vibration. Ensure that haptic vibrations don’t disrupt user experiences involving the camera, gyroscope, or microphone.</mark></p><p id="1430c95d-4a5c-4aa2-8a12-6727fa18181a" class=""><strong>햅틱 재생이 다른 사용자 경험에 영향을 미칠 수 있다는 점을 유의하세요.</strong><mark class="highlight-yellow_background"> 설계적으로, 햅틱은 사용자가 진동을 느낄 수 있을만큼 충분한 물리적인 힘을 생성합니다. </mark>햅틱 진동이 카메라, 자이로스코프 또는 마이크를 포함하는 사용자 경험을 방해하지 않도록 해야 합니다.</p><p id="d9c37c4c-7fd2-4327-bf5a-81c505322520" class=""><em><strong>→ 햅틱 진동을 카메라, 자이로스코프, 마이크 등의 사용자 경험을 방해하지 않게 하며 사용해야 한다.</strong></em></p><h2 id="0eadebda-3218-4a95-8d23-ac919d62e241" class=""><a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#Custom-haptics"><strong>Custom haptics</strong></a></h2><p id="9af74984-4cfa-4635-9a6f-a38c8d9588cf" class=""><mark class="highlight-gray">Games often use custom haptics to enhance gameplay. Although it’s less common, nongame apps might also use custom haptics to provide a richer, more delightful experience.</mark></p><p id="ab497b27-4b0e-41b2-96e0-ba50ea090ada" class="">게임은 종종 게임플레이를 강화하기 위해 커스텀 햅틱을 사용합니다. 흔하지 않지만, 비게임 앱도 더 풍부하고 즐거운 경험을 제공하기 위해 커스텀 햅틱을 사용할 수 있습니다.</p><p id="aa5a518a-2fcc-4976-b786-63ec3ea19edd" class=""><mark class="highlight-gray">You can design custom haptic patterns that vary dynamically, based on user input or context. For example, the impact players feel when a game character jumps from a tree can be stronger than when the character jumps in place, and substantial experiences — like a collision or a hit — can feel very different from subtle experiences like the approach of footsteps or a looming danger.</mark></p><p id="474fa908-0bd2-4bb6-9541-a6f6a4bf2b15" class=""><mark class="highlight-yellow_background">사용자 입력이나 문맥에 따라 동적으로 변하는 커스텀 햅틱 패턴을 디자인할 수 있습니다.</mark> 예를 들어, 게임 캐릭터가 나무에서 점프할 때 느끼는 충격은 그 캐릭터가 움직이지 않을 때보다 더 세게 느낄 수 있으며, 충돌이나 히트와 같은 큰 경험은 발걸음이 다가오거나 위협적인 상황과 같은 미묘한 경험과 매우 다를 수 있습니다.</p><p id="1e1d345e-ac09-4101-b425-cee5e0b66279" class=""><em><strong>→ 상황에 맞게 커스텀 햅틱을 하는 예시</strong></em></p><p id="f5bc8471-cd45-471b-88a3-4105221d94c3" class=""><mark class="highlight-gray">There are two basic building blocks you can use to generate custom haptic patterns.</mark></p><p id="441a2005-6d2e-430e-8738-6393616a7e3f" class="">커스텀 햅틱 패턴을 생성하기 위해 사용할 수 있는 두 가지 <mark class="highlight-yellow_background"><strong>기본적인 빌딩 블록</strong></mark>이 있습니다.</p><ul id="a094406c-347a-4bef-b163-bcf07477357e" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray"><em>Transient</em></mark><mark class="highlight-gray"> events are brief and compact, often feeling like taps or impulses. The experience of tapping the Flashlight button on the Home Screen is an example of a transient event.</mark></li></ul><p id="51f4e9da-eed6-4cbe-93e4-4d0670aeac68" class=""><mark class="highlight-yellow_background">Transient events*</mark>은 짧고 간결하며 탭이나 임펄스와 같은 느낌을 주로 줍니다<mark class="highlight-yellow_background">. 홈 화면의 플래시라이트 버튼</mark>을 탭하는 경험은 일시적 이벤트의 예입니다.</p><ul id="0459f7e6-7ea2-44eb-8ef0-8cabaa51f744" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray"><em>Continuous</em></mark><mark class="highlight-gray"> events feel like sustained vibrations, such as the experience of the lasers effect in a message.</mark></li></ul><p id="fed6b1ec-0662-4346-b919-0b5960e4458c" class=""><mark class="highlight-yellow_background">Continuous events*</mark>는 지속적인 진동과 같은 느낌입니다. 예를 들어 메시지의 레이저 효과와 같은 경험이 있습니다.</p><p id="d60d3c62-9e45-47d5-914a-a35b53af1e35" class="">
+</p><p id="40c9d16d-656e-482a-a96f-60293a12149a" class=""><mark class="highlight-gray">Regardless of the type of haptic event you use to generate a custom haptic, you can also control its </mark><mark class="highlight-gray"><em>sharpness</em></mark><mark class="highlight-gray"> and </mark><mark class="highlight-gray"><em>intensity</em></mark><mark class="highlight-gray">. You can think of sharpness as a way to abstract a haptic experience into the waveform that produces the corresponding physical sensations. Specifying sharpness lets you relay to the system your intent for the experience. For example, you might use sharpness values to convey an experience that’s soft, rounded, or organic, or one that’s crisp, precise, or mechanical. As the term implies, intensity means the strength of the haptic.</mark></p><p id="8ef1bc7b-76a0-4bd3-8ed3-65b40d2222fa" class="">커스텀 햅틱을 생성하기 위해 사용하는 햅틱 이벤트의 종류에 관계없이 *날카로움(sharpness)*과 *강도(intensity)*를 조절할 수도 있습니다. 날카로움은 해당 햅틱 경험을 생성하는데 사용되는 파형을 추상화하는 방법으로, 시스템에게 경험에 대한 의도를 전달합니다. 예를 들어, 날카로움 값을 사용하여 부드럽고 둥근 경험이나 정밀하고 기계적인 경험과 같은 경험을 전달할 수 있습니다. 강도는 햅틱의 강도를 의미합니다.</p><p id="c4985ff0-a35d-4c26-8c31-48a6aa8c1580" class=""><em><strong>→ 커스텀 햅틱 생성시, sharpness와 intensity를 조절할 수 있다.</strong></em></p><ul id="c7bab972-2f4d-4164-b4a9-14395a8b1bfc" class="toggle"><li><details open=""><summary>역자참조</summary><pre id="baf45416-f5cf-4206-a8cd-a6ef0f94490f" class="code"><code>let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 0.7)
+let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.5)
+let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: i, duration: 10)</code></pre><p id="aac9331c-8a5d-4982-bace-557c3db18b6e" class="">sharpness가 높으면, 강하고 정교한 진동을 생성</p><p id="d3d6f634-c726-45e2-979e-24fa96c62754" class="">sharpness가 낮으면, 부드럽고 라운드한 진동 생성</p></details></li></ul><p id="4106c395-0c9d-4048-9fab-e0599c52a981" class=""><mark class="highlight-gray">By combining transient and continuous events, varying sharpness and intensity, and including optional audio content, you can create a wide range of different haptic experiences. For developer guidance, see </mark><mark class="highlight-gray"><a href="https://developer.apple.com/documentation/corehaptics">Core Haptics</a></mark><mark class="highlight-gray">.</mark></p><p id="678f2781-c980-48ce-8005-4fb65ce6ea09" class="">일시적 이벤트와 연속적 이벤트를 조합하고, 날카로움과 강도를 다양하게 변화시키며, 선택적 오디오 콘텐츠를 포함하여 다양한 햅틱 경험을 만들 수 있습니다. 자세한 개발자 지침은 <a href="https://developer.apple.com/documentation/corehaptics"><strong>Core Haptics</strong></a>를 참고하세요.</p><h2 id="4c1b6dc9-7a2e-4869-80a3-65e27a82bbaa" class=""><mark class="highlight-gray"><a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#Platform-considerations"><strong>Platform considerations</strong></a></mark></h2><h3 id="fbfa3b65-71f4-4e5d-b3f8-d595da83aa12" class=""><mark class="highlight-gray"><a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#iPadOS-tvOS-visionOS"><strong>iPadOS, tvOS, visionOS</strong></a></mark></h3><p id="4a904d03-4d20-4d10-a5ab-1dea6f10b4ff" class=""><mark class="highlight-gray">Game controllers can play haptics and you can support game controller input in your apps. For developer guidance, see </mark><mark class="highlight-gray"><a href="https://developer.apple.com/documentation/corehaptics/playing_haptics_on_game_controllers">Playing Haptics on Game Controllers</a></mark><mark class="highlight-gray">.</mark></p><p id="a55ea6f0-0070-4149-a97b-312d42c1d065" class=""><mark class="highlight-yellow_background">게임 컨트롤러는 햅틱을 재생할 수 있으며</mark> 앱에서 게임 컨트롤러 입력을 지원할 수 있습니다. 자세한 개발자 지침은 <a href="https://developer.apple.com/documentation/corehaptics/playing_haptics_on_game_controllers"><strong>Playing Haptics on Game Controllers</strong></a>를 참고하세요.</p><h3 id="94e938c3-f20e-4047-891a-91f939ae1e6a" class=""><mark class="highlight-gray"><a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#iOS"><strong>iOS</strong></a></mark></h3><p id="0f9a2f47-4b34-4b21-a64b-c63eaa4df005" class=""><mark class="highlight-gray">On supported iPhone models, you can add haptics to your experience in the following ways:</mark></p><p id="702cfecc-7303-4a60-96a7-9a187d896ee2" class="">지원되는 iPhone 모델에서는 다음과 같은 방법으로 경험에 햅틱을 추가할 수 있습니다:</p><ul id="f45b7279-b0a6-4054-af2b-e70fca458b09" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray">Use standard UI components — like </mark><mark class="highlight-gray"><a href="https://developer.apple.com/design/human-interface-guidelines/toggles">toggles</a></mark><mark class="highlight-gray">, </mark><mark class="highlight-gray"><a href="https://developer.apple.com/design/human-interface-guidelines/sliders">sliders</a></mark><mark class="highlight-gray">, and </mark><mark class="highlight-gray"><a href="https://developer.apple.com/design/human-interface-guidelines/pickers">pickers</a></mark><mark class="highlight-gray"> — that play Apple-designed system haptics by default.</mark></li></ul><p id="476dcddc-2923-487d-8bbc-d248044d30b6" class="">기본적으로 Apple이 디자인한 시스템 햅틱을 재생하는 <a href="https://developer.apple.com/design/human-interface-guidelines/toggles"><strong>toggles</strong></a>, <a href="https://developer.apple.com/design/human-interface-guidelines/sliders"><strong>sliders</strong></a>, <a href="https://developer.apple.com/design/human-interface-guidelines/pickers"><strong>pickers</strong></a> 와 같은 <mark class="highlight-yellow_background">표준 UI 구성 요소를 사용</mark>합니다.</p><ul id="80914766-fa82-4ca0-a8bc-2752ac016af5" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray">When it makes sense, use a feedback generator to play one of several predefined haptic patterns in the categories of </mark><mark class="highlight-gray"><a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#Notification">notification</a></mark><mark class="highlight-gray">, </mark><mark class="highlight-gray"><a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#Impact">impact</a></mark><mark class="highlight-gray">, and </mark><mark class="highlight-gray"><a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#Selection">selection</a></mark><mark class="highlight-gray"> (for developer guidance, see </mark><mark class="highlight-gray"><a href="https://developer.apple.com/documentation/uikit/uifeedbackgenerator"><code>UIFeedbackGenerator</code></a></mark><mark class="highlight-gray">).</mark></li></ul><p id="58f69edb-b9e2-491b-92de-2e265c28e4b3" class="">의미가 있는 경우, <mark class="highlight-yellow_background">feedback generator를 사용</mark>하여 <mark class="highlight-yellow_background">미리 정의된 몇 가지 햅틱 패턴 중 하나를 재생</mark>합니다. 이 패턴은 <a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#Notification"><strong>notification</strong></a>, <a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#Impact"><strong>impact</strong></a>, <a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#Selection"><strong>selection</strong></a> 카테고리에 속합니다. (자세한 개발자 지침은 <a href="https://developer.apple.com/documentation/uikit/uifeedbackgenerator"><strong>UIFeedbackGenerator</strong></a>를 참고하세요.)</p><h3 id="0bbacc29-c90b-463d-afe1-df5a3e19b0a4" class=""><mark class="highlight-gray"><a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#Notification"><strong>Notification</strong></a></mark></h3><p id="10b6a952-3c3d-40d9-9e8b-6bdad8af2768" class=""><mark class="highlight-gray">Notification haptics provide feedback about the outcome of a task or action, such as depositing a check or unlocking a vehicle.</mark></p><p id="b0ee413a-13c0-466c-a58d-eb0d1a7464e7" class=""><mark class="highlight-yellow_background">알림 햅틱은 작업 또는 동작의 결과에 대한 피드백을 제공합니다.</mark> 예를 들어 수표를 입금하거나 차량을 잠금 해제하는 작업에 대한 피드백을 제공합니다.</p><figure id="1851ab9a-11e7-4855-a1fc-d8712c3da347"><div class="source"><a href="https://docs-assets.developer.apple.com/published/0897204a4f1db99e065e44dab6756699/success.mp4">https://docs-assets.developer.apple.com/published/0897204a4f1db99e065e44dab6756699/success.mp4</a></div></figure><p id="5ecab509-1dc7-45cd-8219-23445f5f13f0" class=""><mark class="highlight-gray"><strong>PlaySuccess.</strong></mark><mark class="highlight-gray"> Indicates that a task or action has completed.</mark></p><p id="9404b8ca-948b-42b6-897c-d4c183d0b266" class=""><strong>재생성공.</strong> 작업 또는 동작이 완료되었음을 나타냅니다.</p><figure id="c8e2810f-90d1-45c3-939c-8c101547e44f"><div class="source"><a href="https://docs-assets.developer.apple.com/published/2374d9cd8296f4210027c0a84ff72a33/warning.mp4">https://docs-assets.developer.apple.com/published/2374d9cd8296f4210027c0a84ff72a33/warning.mp4</a></div></figure><p id="5af327a6-5342-4fd1-92b3-59a5e143cf45" class=""><mark class="highlight-gray"><strong>PlayWarning.</strong></mark><mark class="highlight-gray"> Indicates that a task or action has produced a warning of some kind.</mark></p><p id="297a47aa-1cf8-4af0-b9cb-e35751928d09" class=""><strong>재생경고.</strong> 작업 또는 동작이 어떤 종류의 경고를 발생시켰음을 나타냅니다.</p><figure id="f337e04f-19e5-4fc0-a45d-c263d4478130"><div class="source"><a href="https://docs-assets.developer.apple.com/published/2819b3e6568828343507b49151c5bbb9/error.mp4">https://docs-assets.developer.apple.com/published/2819b3e6568828343507b49151c5bbb9/error.mp4</a></div></figure><p id="948c9d48-fe6f-4392-b312-b6551bdc6802" class=""><mark class="highlight-gray"><strong>PlayError.</strong></mark><mark class="highlight-gray"> Indicates that an error has occurred.</mark></p><p id="6cdc94eb-9611-4d35-b6d8-76f82b644ad6" class=""><strong>재생오류.</strong> 오류가 발생했음을 나타냅니다.</p><h3 id="062f6c55-d4b1-4d57-9ffd-4b4b88a060c1" class=""><mark class="highlight-gray"><a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#Impact"><strong>Impact</strong></a></mark></h3><p id="b40a14c0-f6ac-42e6-a8a5-dfd8b2716438" class=""><mark class="highlight-gray">Impact haptics provide a physical metaphor you can use to complement a visual experience. For example, people might feel a tap when a view snaps into place or a thud when two heavy objects collide.</mark></p><p id="0751398c-1fcf-45af-8b70-97a169b49439" class="">Impact haptics는 <mark class="highlight-yellow_background">시각적 경험을 보완하기 위해 사용할 수 있는 물리적 은유를 제공</mark>합니다. 예를 들어, 사람들은 뷰가 정렬될 때 탭을 느낄 수 있거나 두 개의 무거운 물체가 충돌할 때 덜컹거림을 느낄 수 있습니다.</p><figure id="847ee57a-4100-4983-9bce-826fbbe7f630"><div class="source"><a href="https://docs-assets.developer.apple.com/published/207d3bd2880ad0214e9516d354087ad8/impact-light.mp4">https://docs-assets.developer.apple.com/published/207d3bd2880ad0214e9516d354087ad8/impact-light.mp4</a></div></figure><p id="a5d4dd4e-d36e-44da-a8c2-02f3f43eab82" class=""><mark class="highlight-gray">Play</mark><mark class="highlight-gray"><strong>Light.</strong></mark><mark class="highlight-gray"> Indicates a collision between small or lightweight UI objects.</mark></p><p id="a00c624c-461d-49cd-9bec-22e95b941d8e" class=""><strong>재생경량.</strong> 작거나 가벼운 UI 요소 간의 충돌을 나타냅니다.</p><figure id="e8faaf74-075f-4cf7-a24a-959cb4a3f705"><div class="source"><a href="https://docs-assets.developer.apple.com/published/f7a88b6ba1abf8536df16bf04ccf33aa/impact-medium.mp4">https://docs-assets.developer.apple.com/published/f7a88b6ba1abf8536df16bf04ccf33aa/impact-medium.mp4</a></div></figure><p id="452bad64-02b0-4a37-9b7e-010ceab7effe" class=""><mark class="highlight-gray">Play</mark><mark class="highlight-gray"><strong>Medium.</strong></mark><mark class="highlight-gray"> Indicates a collision between medium-sized or medium-weight UI objects.</mark></p><p id="6aee2b27-9c4d-4367-8036-ec1b6485d9eb" class=""><strong>재생중간.</strong> 중간 크기 또는 중간 무게의 UI 요소 간의 충돌을 나타냅니다.</p><figure id="445b1c05-b5b1-4def-8450-956706e9c58b"><div class="source"><a href="https://docs-assets.developer.apple.com/published/e10138e952d7e6924db05491d2e5e136/impact-heavy.mp4">https://docs-assets.developer.apple.com/published/e10138e952d7e6924db05491d2e5e136/impact-heavy.mp4</a></div></figure><p id="2c521d93-89d3-46c6-802b-70ce72fc2f23" class=""><mark class="highlight-gray">Play</mark><mark class="highlight-gray"><strong>Heavy.</strong></mark><mark class="highlight-gray"> Indicates a collision between large or heavyweight UI objects.</mark></p><p id="73fd5b36-8e48-4aef-9ff0-8e356928584d" class=""><strong>재생무거운.</strong> 큰 크기 또는 무거운 UI 요소 간의 충돌을 나타냅니다.</p><figure id="b21ddb24-cd0a-4424-8ad7-6f50a608f549"><div class="source"><a href="https://docs-assets.developer.apple.com/published/5911588179c51c4e54f540397dcd74d4/impact-rigid.mp4">https://docs-assets.developer.apple.com/published/5911588179c51c4e54f540397dcd74d4/impact-rigid.mp4</a></div></figure><p id="8c3e835d-da8f-4a1c-803d-c41cbd5c494a" class=""><mark class="highlight-gray">Play</mark><mark class="highlight-gray"><strong>Rigid.</strong></mark><mark class="highlight-gray"> Indicates a collision between hard or inflexible UI objects.</mark></p><p id="727fea92-4375-4b29-a851-358d800b91ae" class=""><strong>재생경직된.</strong> 단단하거나 유연하지 않은 UI 요소 간의 충돌을 나타냅니다.</p><figure id="766cddae-5d55-4dd5-8c5b-0bc89036f743"><div class="source"><a href="https://docs-assets.developer.apple.com/published/19d8f88b9365b0404c252bf2197683e7/impact-soft.mp4">https://docs-assets.developer.apple.com/published/19d8f88b9365b0404c252bf2197683e7/impact-soft.mp4</a></div></figure><p id="882f82d2-217a-4aff-baa9-80c2999d68f2" class=""><mark class="highlight-gray">Play</mark><mark class="highlight-gray"><strong>Soft.</strong></mark><mark class="highlight-gray"> Indicates a collision between soft or flexible UI objects.</mark></p><p id="ff4177b1-04a0-450c-8227-d480bb3768f7" class=""><strong>재생부드러운.</strong> 부드러운 또는 유연한 UI 요소 간의 충돌을 나타냅니다.</p><h3 id="2b7a1221-e755-46dd-b103-5d721d540149" class=""><mark class="highlight-gray"><a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#Selection"><strong>Selection</strong></a></mark></h3><p id="03d20b40-23a7-4f08-84dc-0b3cbb2b5131" class=""><mark class="highlight-gray">Selection haptics provide feedback while the values of a UI element are changing.</mark></p><p id="826e32f6-78d3-4b37-bbdd-3a5269a47e38" class="">Selection haptics는 <mark class="highlight-yellow_background">UI 요소의 값이 변경되는 동안 피드백을 제공</mark>합니다.</p><figure id="ca636ea0-1766-4672-ae77-bdfaedfd42d1"><div class="source"><a href="https://docs-assets.developer.apple.com/published/5357fe51284e420e33e0adca4d8ca3a9/retarget.mp4">https://docs-assets.developer.apple.com/published/5357fe51284e420e33e0adca4d8ca3a9/retarget.mp4</a></div></figure><p id="2aae39c3-e4b0-489c-907e-870a095badfc" class=""><mark class="highlight-gray">Play</mark><mark class="highlight-gray"><strong>Selection.</strong></mark><mark class="highlight-gray"> Indicates that a UI element’s values are changing.</mark></p><p id="7f33e809-6426-4a66-b030-af6cc75e4c13" class=""><strong>재생선택.</strong> UI 요소의 값이 변경되고 있음을 나타냅니다.</p><h3 id="98b433d7-f629-4271-8810-c31a37735e44" class=""><mark class="highlight-gray"><a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#macOS"><strong>macOS</strong></a></mark></h3><p id="77b8d0da-e2c0-4d57-bf46-a56ca2bbe8cf" class=""><mark class="highlight-gray">When a Magic Trackpad is available, your app can provide one of the three following haptic patterns in response to a drag operation or force click.</mark></p><p id="d9ffb915-9e70-4ea5-bca5-b2be15d33455" class="">Magic Trackpad가 사용 가능한 경우, 앱은 드래그 작업이나 강제 클릭에 대한 다음 세 가지 햅틱 패턴 중 하나를 제공할 수 있습니다.</p><table id="0e586e85-9cc3-44f3-a576-6ebff58f728a" class="simple-table"><tbody><tr id="7a730a25-14e0-487d-b120-799b2388b999"><td id="LIOU" class=""><mark class="highlight-gray"><strong>Haptic feedback pattern</strong></mark></td><td id="oeIo" class=""><mark class="highlight-gray"><strong>Description</strong></mark></td><td id="{^sh" class="" style="width:245px"></td></tr><tr id="dbda6ab2-2763-45d4-9016-3d31e3246be9"><td id="LIOU" class=""><mark class="highlight-gray">Alignment</mark></td><td id="oeIo" class=""><mark class="highlight-gray">Indicates the alignment of a dragged item. For example, this pattern could be used in a drawing app when the people drag a shape into alignment with another shape. Other scenarios where this type of feedback could be used might include scaling an object to fit within specific dimensions, positioning an object at a preferred location, or reaching the beginning/end or minimum/maximum of something like a scrubber in a video app.</mark></td><td id="{^sh" class="" style="width:245px">이 패턴은<mark class="highlight-yellow_background"> 드래그된 항목의 정렬을</mark> 나타냅니다. 예를 들어, 드로잉 앱에서 사람들이 다른 모양과 정렬하기 위해 모양을 드래그 할 때 이 패턴을 사용할 수 있습니다. 이 유형의 피드백을 사용할 수 있는 다른 시나리오에는 객체를 특정 차원 내에 맞게 조절하는 경우, <mark class="highlight-yellow_background">객체를 선호하는 위치로 배치하는 경우, 또는 비디오 앱에서 스크러버의 시작/끝 또는 최소/최대 지점에 도달하는 경우 등</mark>이 있습니다.</td></tr><tr id="5f2d828a-6d31-4a17-a83f-8c93008d139f"><td id="LIOU" class=""><mark class="highlight-gray">Level change</mark></td><td id="oeIo" class=""><mark class="highlight-gray">Indicates movement between discrete levels of pressure. For example, as people press a fast-forward button on a video player, playback could increase or decrease and haptic feedback could be provided as different levels of pressure are reached.</mark></td><td id="{^sh" class="" style="width:245px">이 패턴은 압력의 <mark class="highlight-yellow_background">분리된 레벨 간의 움직임을 나타냅니다.</mark> 예를 들어, 사람들이 비디오 플레이어의<mark class="highlight-yellow_background"> 빨리 감기 버튼</mark>을 누를 때, 재생 속도가 증가하거나 감소할 수 있으며,<mark class="highlight-yellow_background"> 서로 다른 압력 레벨에 도달할 때마다 다른 수준의 햅틱 피드백이 제공</mark>될 수 있습니다.</td></tr><tr id="a4021d84-8eff-4661-b6a1-fbdca0521468"><td id="LIOU" class=""><mark class="highlight-gray">Generic</mark></td><td id="oeIo" class=""><mark class="highlight-gray">Intended for providing general feedback when the other patterns don’t apply.</mark></td><td id="{^sh" class="" style="width:245px">이 패턴은 <mark class="highlight-yellow_background">다른 패턴이 적용되지 않을 때</mark> 일반적인 피드백을 제공하는데 사용됩니다.</td></tr></tbody></table><p id="2edfcee1-f6e2-4cd3-8009-462fb4bb23b4" class=""><mark class="highlight-gray">For developer guidance, see </mark><mark class="highlight-gray"><a href="https://developer.apple.com/documentation/appkit/nshapticfeedbackperformer"><code>NSHapticFeedbackPerformer</code></a></mark><mark class="highlight-gray">.</mark></p><h3 id="45a90beb-e751-4e14-90d7-5af1fed9b638" class=""><mark class="highlight-gray"><a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics#watchOS"><strong>watchOS</strong></a></mark></h3><p id="57b2ec39-ba87-4006-b8de-f767056539c7" class=""><mark class="highlight-gray">Apple Watch Series 4 and later provides haptic feedback for the Digital Crown, which gives people a more tactile experience as they scroll through content. By default, the system provides linear haptic detents that people can feel as they rotate the Digital Crown. Some system controls, like table views, provide detents as new items scroll onto the screen. For developer guidance, see </mark><mark class="highlight-gray"><a href="https://developer.apple.com/documentation/watchkit/wkhaptictype"><code>WKHapticType</code></a></mark><mark class="highlight-gray">.</mark></p><p id="bcef519c-2f06-4764-9bd5-ff50e21afa5a" class="">Apple Watch Series 4 이상은 Digital Crown에 햅틱 피드백을 제공하여 사용자가 콘텐츠를 스크롤하는 동안 더욱 촉각적인 경험을 할 수 있습니다. 기본적으로 시스템은 Digital Crown을 회전시키면 사용자가 느낄 수 있는 선형적인 햅틱 디텐트를 제공합니다. 일부 시스템 컨트롤(예: 테이블 뷰)은 새로운 항목이 화면에 나타날 때 디텐트를 제공합니다. 개발자 가이드는 <a href="https://developer.apple.com/documentation/watchkit/wkhaptictype"><strong>WKHapticType</strong></a>를 참조하세요.</p><p id="eceb0dc1-82c3-4cfc-8c75-ec98f110ee5b" class=""><em><strong>→ Watch Series 4 이상에서의 햅틱 피드백</strong></em></p><p id="3680d8cb-10b2-4e2f-be77-46c14157b32f" class="">
+</p><p id="072f1d6c-8777-4493-91da-bb7db9637b60" class=""><mark class="highlight-gray">watchOS defines the following set of haptics, each of which conveys a specific meaning to people.</mark></p><p id="cadc2f1d-0d77-43ab-b064-e00b6351eb40" class="">watchOS는 다음과 같은 일련의 햅틱을 정의하며, 각각은 사용자에게 특정한 의미를 전달합니다.</p><p id="24e72013-a63f-43c5-90fe-fea15b8aa37a" class="">
+</p><p id="158cc16b-3542-4da1-a693-d56e6395f41a" class=""><mark class="highlight-gray">• Notification</mark></p><figure id="7f4b3743-9bd3-470e-91e3-d37eb493e782"><div class="source"><a href="https://docs-assets.developer.apple.com/published/d70f96ab594ddd69fed28380de40d81f/haptics-notification.mp4">https://docs-assets.developer.apple.com/published/d70f96ab594ddd69fed28380de40d81f/haptics-notification.mp4</a></div></figure><p id="3fa5f9a1-e1a7-453f-bee5-f7f2fefeed83" class=""><mark class="highlight-gray"><strong>Notification.</strong></mark><mark class="highlight-gray"> Tells the person that something significant or out of the ordinary has happened and requires their attention. The system plays this same haptic when a local or remote notification arrives.</mark></p><p id="2a42169c-5c79-455d-8b39-3eb7868e4f19" class="">Notification. <mark class="highlight-yellow_background">중요하거나 보통과 다른 사건이 발생 했음을 알리며</mark> 사용자의 주의를 요구합니다. 시스템은 로컬 또는 원격 알림이 도착할 때 이 같은 햅틱을 재생합니다.<mark class="highlight-gray">
+• Up</mark></p><figure id="f49e19e3-0c77-4783-b4c8-615775aef31c"><div class="source"><a href="https://docs-assets.developer.apple.com/published/0db71b01ea6497246fa9efeb14ab09c2/haptics-levelup.mp4">https://docs-assets.developer.apple.com/published/0db71b01ea6497246fa9efeb14ab09c2/haptics-levelup.mp4</a></div></figure><p id="1bc33701-f223-49b2-9d3e-7e812dcbc8b7" class=""><strong>Up.</strong> Tells the person that an important value increased above a significant threshold.</p><p id="0fe64d96-84c7-4c26-87f0-358abdc422f2" class="">Up. <mark class="highlight-yellow_background">중요한 값이 유의한 임계값 이상으로 증가</mark>했음을 알려줍니다.<mark class="highlight-gray">
+• Down</mark></p><figure id="2c74d11e-b736-4ff6-b7ca-3d3f06336f67"><div class="source"><a href="https://docs-assets.developer.apple.com/published/388748aef65feaa7ca356a33463787c7/haptics-leveldown.mp4">https://docs-assets.developer.apple.com/published/388748aef65feaa7ca356a33463787c7/haptics-leveldown.mp4</a></div></figure><p id="d72fb001-f9bf-4db5-afef-42a403e0d887" class=""><strong>Down.</strong> Tells the person that an important value decreased below a significant threshold.</p><p id="a63f2b33-fda6-48c1-a89a-53927805fd28" class="">Down. <mark class="highlight-yellow_background">중요한 값이 유의한 임계값 아래로 감소</mark>했음을 사용자에게 알려줍니다.<mark class="highlight-gray">
+• Success</mark></p><figure id="69209edb-e8f6-4088-b2e3-daef81116f7e"><div class="source"><a href="https://docs-assets.developer.apple.com/published/dd9bc1ecfdc2f5f1f9cdf66700a622f0/haptics-success.mp4">https://docs-assets.developer.apple.com/published/dd9bc1ecfdc2f5f1f9cdf66700a622f0/haptics-success.mp4</a></div></figure><p id="5a18ee55-598b-4359-9d94-9524cf2c7434" class=""><strong>Success.</strong> Tells the person that an action completed successfully.</p><p id="f8417b2a-3b09-47d1-9721-64cb6cd0f11b" class="">Success. <mark class="highlight-yellow_background">작업이 성공적으로 완료</mark>되었음을 사용자에게 알립니다.<mark class="highlight-gray">
+• Failure</mark></p><figure id="93c1cbb0-94d3-4bd0-aaff-f8b948654d50"><div class="source"><a href="https://docs-assets.developer.apple.com/published/1a90eb65d27672351d5e11585300cfc2/haptics-failure.mp4">https://docs-assets.developer.apple.com/published/1a90eb65d27672351d5e11585300cfc2/haptics-failure.mp4</a></div></figure><p id="a8df5ef1-ecac-4aac-9d34-08ff4fe2627b" class=""><strong>Failure.</strong> Tells the person that an action failed.</p><p id="aabcbed0-83d5-47f7-9c93-305f6d918e9c" class="">Failure. <mark class="highlight-yellow_background">작업이 실패했음</mark>을 사용자에게 알립니다.<mark class="highlight-gray">
+• Retry</mark></p><figure id="b2877d72-5dc9-4493-a92c-43c03b8ef149"><div class="source"><a href="https://docs-assets.developer.apple.com/published/1b648d1c5f970a2dc4d4029abcf7d2da/haptics-retry.mp4">https://docs-assets.developer.apple.com/published/1b648d1c5f970a2dc4d4029abcf7d2da/haptics-retry.mp4</a></div></figure><p id="78d6c33d-2dc5-45e9-a71e-3af8137c9025" class=""><strong>Retry.</strong> Tells the person that an action failed but they can retry it.</p><p id="99d94131-c68d-4a7a-9e51-51d382cfff15" class="">Retry. <mark class="highlight-yellow_background">작업이 실패했지만 다시 시도할 수 있음</mark>을 사용자에게 알립니다.<mark class="highlight-gray">
+• Start</mark></p><figure id="5517f55f-d92d-43cf-a507-66322cd12717"><div class="source"><a href="https://docs-assets.developer.apple.com/published/2880c14c5074cc64fb2102d0f97f6d04/haptics-start.mp4">https://docs-assets.developer.apple.com/published/2880c14c5074cc64fb2102d0f97f6d04/haptics-start.mp4</a></div></figure><p id="06264074-71c7-4594-867f-7196d97fae32" class=""><strong>Start.</strong> Tells the person that an activity started. Use this haptic when starting a timer or any other activity that a person can explicitly start and stop. The stop haptic usually follows this haptic.<mark class="highlight-gray">
+</mark>Start. <mark class="highlight-yellow_background">활동이 시작</mark>되었음을 사람에게 알려줍니다. 타이머 또는 사람이 명시적으로 시작하고 중지할 수 있는 다른 활동을 시작할 때 이 햅틱을 사용합니다. 중지 햅틱은 일반적으로 이 햅틱을 따릅니다.</p><p id="e81af086-dd7c-4f0e-abd4-46cf98c80336" class=""><mark class="highlight-gray">• Stop</mark></p><figure id="6da630a6-81b4-4592-87b9-bc74d6e2c9de"><div class="source"><a href="https://docs-assets.developer.apple.com/published/d24f9674a900dd03b6e80f9094e50c4a/haptics-stop.mp4">https://docs-assets.developer.apple.com/published/d24f9674a900dd03b6e80f9094e50c4a/haptics-stop.mp4</a></div></figure><p id="930626ca-00ca-4c77-ab96-c22cc9868b36" class=""><strong>Stop.</strong> Tells the person that an activity stopped. Use this haptic when stopping a timer or other activity that the person previously started.<mark class="highlight-gray">
+</mark>Stop. <mark class="highlight-yellow_background">활동이 중지</mark>되었음을 사용자에게 알립니다. 사용자가 이전에 시작한 타이머 또는 기타 활동을 중지할 때 이 햅틱을 사용합니다.</p><p id="5dfc2ade-c635-41a9-9aaa-c2708fb4726d" class=""><mark class="highlight-gray">• Click</mark></p><figure id="5f81274d-fedc-4110-a027-09bb74b7c187"><div class="source"><a href="https://docs-assets.developer.apple.com/published/f99686f74855b7ec9bd1b1212fd313a1/haptics-click.mp4">https://docs-assets.developer.apple.com/published/f99686f74855b7ec9bd1b1212fd313a1/haptics-click.mp4</a></div></figure><p id="ce7e9a8f-0617-4246-bde7-a5f71793e93c" class=""><strong>Click.</strong> Provides the sensation of a dial clicking, helping you communicate progress at predefined increments or intervals. Overusing the click haptic tends to diminish its utility and can even be confusing when clicks overlap each other.</p><p id="45859bf4-3f34-4b47-b6b2-17261b8b41b0" class="">Click. 다이얼 클릭의 감각을 제공하여 미리 정의된 증분 또는 간격으로 <mark class="highlight-yellow_background">진행 상황을 전달하는 데 도움이 됩니다. </mark>클릭 햅틱을 과도하게 사용하면 유용성이 감소하고 클릭이 서로 겹칠 때 혼란스러울 수도 있습니다.</p></div></article></body></html>
